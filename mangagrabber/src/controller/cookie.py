@@ -1,0 +1,1 @@
+COOKIE_NAME = "mmm_cookies"
