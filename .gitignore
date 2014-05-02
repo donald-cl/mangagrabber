@@ -1,2 +1,5 @@
 auth.txt
+*.sh
 *.pyc
+mangagrabber/grabs
+mangagrabber/updates
