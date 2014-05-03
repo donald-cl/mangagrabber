@@ -1,6 +1,7 @@
 from BeautifulSoup import BeautifulSoup
 from os.path import expanduser
-import time
+from os.path import isfile
+import datetime
 import hashlib
 import smtplib
 import urllib2
@@ -29,7 +30,7 @@ def send_email(email, pw, receivers, content):
     gmail_pwd = pw
     FROM = email
     TO = receivers
-    TIME = time.time()
+    TIME = datetime.date.today()
     SUBJECT = "New manga has been released! --- " + str(TIME)
 
     # Prepare actual message
@@ -64,16 +65,25 @@ class SiteChecker(object):
         raise NotImplementedError("Abstract class Site Checker has no implementation of get_updates")
 
 def set_cache_site_diff(sitename, all_updates):
-    dirname = get_mangagrabber_dir() + "/mangagrabber/updates/" + sitename + "_updates"
-    f = open(dirname, 'w')
+    dirname = get_mangagrabber_dir() + "mangagrabber/updates/" + sitename + "_updates"
+    if isfile(dirname):
+        f = open(dirname, 'w')
+    else:
+        f = open(dirname, 'w+')
+
     f.write(all_updates)
     f.close()
 
 def get_cache_site_diff(sitename, all_updates):
-    dirname = get_mangagrabber_dir() + "/mangagrabber/updates/" + sitename + "_updates"
-    f = open(dirname, 'r+')
-    current_content = f.read()
-    f.close()
+    dirname = get_mangagrabber_dir() + "mangagrabber/updates/" + sitename + "_updates"
+
+    if isfile(dirname):
+        f = open(dirname, 'r+')
+        current_content = f.read()
+        f.close()
+    else:
+        current_content = ""
+
     return current_content
 
 class MangaStreamChecker(SiteChecker):
