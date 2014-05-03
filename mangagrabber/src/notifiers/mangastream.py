@@ -135,6 +135,9 @@ class MangaStreamChecker(SiteChecker):
         elif self.debug:
             print "no new content"
 
+        if self.debug:
+            return all_updates
+
 def main():
     #my_watchlist = ['bleach', 'naruto', 'one piece']
     my_watchlist = []

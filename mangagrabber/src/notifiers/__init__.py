@@ -1,0 +1,1 @@
+from mangastream import *
