@@ -1,90 +1,5 @@
-from BeautifulSoup import BeautifulSoup
-from os.path import expanduser
-from os.path import isfile
-import datetime
-import hashlib
-import smtplib
-import urllib2
-import urllib
-
-HOME = expanduser("~")
-PROJ = "mangagrabber"
-
-def get_mangagrabber_dir():
-    path = "%s/%s/"
-    return path % (HOME, PROJ)
-
-def authenticate():
-    f = open(get_mangagrabber_dir() + 'auth.txt', 'r')
-    lines = f.readlines()
-    lines[0] = lines[0].replace('\n', '')
-    lines[1] = lines[1].replace('\n', '')
-
-    email = lines[0]
-    pw = lines[1]
-
-    return email, pw
-
-def send_email(email, pw, receivers, content):
-    gmail_user = email
-    gmail_pwd = pw
-    FROM = email
-    TO = receivers
-    TIME = datetime.date.today()
-    SUBJECT = "New manga has been released! --- " + str(TIME)
-
-    # Prepare actual message
-    message = """\From: %s\nTo: %s\nSubject: %s\n\n%s
-    """ % (FROM, ", ".join(TO), SUBJECT, content)
-    try:
-        server = smtplib.SMTP("smtp.gmail.com", 587) #or port 465 doesn't seem to work!
-        server.ehlo()
-        server.starttls()
-        server.login(gmail_user, gmail_pwd)
-        server.sendmail(FROM, TO, message)
-        #server.quit()
-        print 'successfully sent the mail'
-    except Exception as e:
-        print e
-        print "failed to send mail"
-
-class SiteChecker(object):
-    def __init__(self, manga_watchlist, sitename, homepage):
-        self.sitename = sitename
-        self.homepage = homepage
-        self.manga_watchlist = set(manga_watchlist)
-        self.debug = False
-
-    def parse_page(self):
-        resp = urllib2.urlopen(self.homepage)
-        html = resp.read()
-        parsed_html = BeautifulSoup(html)
-        return parsed_html
-
-    def get_updates(self):
-        raise NotImplementedError("Abstract class Site Checker has no implementation of get_updates")
-
-def set_cache_site_diff(sitename, all_updates):
-    dirname = get_mangagrabber_dir() + "mangagrabber/updates/" + sitename + "_updates"
-    if isfile(dirname):
-        f = open(dirname, 'w')
-    else:
-        f = open(dirname, 'w+')
-
-    f.write(all_updates)
-    f.close()
-
-def get_cache_site_diff(sitename, all_updates):
-    dirname = get_mangagrabber_dir() + "mangagrabber/updates/" + sitename + "_updates"
-
-    if isfile(dirname):
-        f = open(dirname, 'r+')
-        current_content = f.read()
-        f.close()
-    else:
-        current_content = ""
-
-    return current_content
+from base_notifier import *
+from mailers import mail
 
 class MangaStreamChecker(SiteChecker):
     def __init__(self, manga_watchlist, sitename="mangastream", homepage='http://mangastream.com/'):
@@ -129,8 +44,7 @@ class MangaStreamChecker(SiteChecker):
             set_cache_site_diff(self.sitename, all_updates)
         elif current_content != all_updates:
             set_cache_site_diff(self.sitename, all_updates)
-            email, pw = authenticate()
-            send_email(email, pw, ['donaldhui@gmail.com'], all_updates)
+            mail.ez_send_email(['donaldhui@gmail.com'], all_updates)
             # scrap new chapters?
         elif self.debug:
             print "no new content"
