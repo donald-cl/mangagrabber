@@ -1,5 +1,9 @@
+from utils import util
+import datetime
+import smtplib
+
 def authenticate():
-    f = open(get_mangagrabber_dir() + 'auth.txt', 'r')
+    f = open(util.get_mangagrabber_dir() + 'auth.txt', 'r')
     lines = f.readlines()
     lines[0] = lines[0].replace('\n', '')
     lines[1] = lines[1].replace('\n', '')
@@ -30,7 +34,7 @@ def send_email(email, pw, receivers, content):
         server.starttls()
         server.login(gmail_user, gmail_pwd)
         server.sendmail(FROM, TO, message)
-        #server.quit()
+        server.quit()
         print 'successfully sent the mail'
     except Exception as e:
         print e

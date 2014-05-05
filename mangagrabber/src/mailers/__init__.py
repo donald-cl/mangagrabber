@@ -1,1 +1,1 @@
-from mailers import *
+from mailers.mail import *

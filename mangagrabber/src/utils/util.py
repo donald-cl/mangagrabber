@@ -1,5 +1,4 @@
 from os.path import expanduser
-from os.path import isfile
 
 HOME = expanduser("~")
 PROJ = "mangagrabber"

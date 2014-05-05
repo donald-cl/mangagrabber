@@ -1,11 +1,10 @@
-from base_notifier import *
-from mailers import mail
+from base_notifier import SiteChecker
 
 class MangaStreamChecker(SiteChecker):
     def __init__(self, manga_watchlist, sitename="mangastream", homepage='http://mangastream.com/'):
         SiteChecker.__init__(self, manga_watchlist, sitename, homepage)
 
-    def get_updates(self):
+    def scrape_updates(self):
         parsed_html = self.parse_page()
         update_list = parsed_html.find('ul', attrs={'class':'new-list'})
         new_items = update_list.findAll('li', attrs={'class':'active'})
@@ -32,25 +31,7 @@ class MangaStreamChecker(SiteChecker):
                     print chapter_num
                 all_updates += href + info + caption + chapter_num
 
-        current_content = get_cache_site_diff(self.sitename, all_updates)
-
-        if self.debug:
-            print current_content
-            print "============="
-            print all_updates
-            print "============="
-
-        if current_content is None:
-            set_cache_site_diff(self.sitename, all_updates)
-        elif current_content != all_updates:
-            set_cache_site_diff(self.sitename, all_updates)
-            mail.ez_send_email(['donaldhui@gmail.com'], all_updates)
-            # scrap new chapters?
-        elif self.debug:
-            print "no new content"
-
-        if self.debug:
-            return all_updates
+        return all_updates
 
 def main():
     #my_watchlist = ['bleach', 'naruto', 'one piece']
