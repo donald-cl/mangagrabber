@@ -26,7 +26,7 @@ class SiteChecker(object):
         raise NotImplementedError("Abstract class Site Checker has no implementation of scrape_updates")
 
     def get_updates(self):
-        all_updates = self.scrape_updates()
+        all_updates, update_info = self.scrape_updates()
         current_content = get_cache_site_diff(self.sitename, all_updates)
 
         if self.debug:
@@ -39,7 +39,7 @@ class SiteChecker(object):
             set_cache_site_diff(self.sitename, all_updates)
         elif current_content != all_updates:
             set_cache_site_diff(self.sitename, all_updates)
-            mail.ez_send_email(['donaldhui@gmail.com'], all_updates)
+            mail.ez_send_email(['donaldhui@gmail.com'], all_updates, update_info)
         elif self.debug:
             print "no new content"
 

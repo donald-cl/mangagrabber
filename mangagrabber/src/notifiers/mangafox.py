@@ -3,28 +3,7 @@ import sys
 sys.path.insert(0, os.getcwd())
 
 from base_notifier import SiteChecker
-
-class ChapterInfo(object):
-    def __init__(self, manga_name, chapter_title, chapter_num, href):
-        self.manga_name = manga_name
-        self.chapter_title = chapter_title
-        self.chapter_num = chapter_num
-        self.href = href
-
-    def __str__(self):
-        return self.href + self.chapter_title + self.chapter_num
-
-class UpdateInfo(object):
-    def __init__(self, manga_name, new_chapters):
-        self.manga_name = manga_name
-        self.new_chapters = new_chapters
-
-    def __str__(self):
-        info_str = self.manga_name
-        for chapter in self.new_chapters:
-            info_str += str(chapter)
-
-        return info_str
+from core import *
 
 class MangaFoxChecker(SiteChecker):
     def __init__(self, manga_watchlist, sitename="mangafox", homepage='http://mangafox.me/releases/'):
@@ -36,11 +15,15 @@ class MangaFoxChecker(SiteChecker):
         list_items = update_list.findAll('li')
         item_divs = [ item.find('div') for item in list_items ]
 
+        update_infos = []
+
         all_updates = ''
 
         for item in item_divs:
 
-            all_chapters = item.findAll('dt', recursive=True)
+            all_chapters = item.findAll('dt')
+            chapter_infos = []
+            manga_name = ''
 
             for chapter in all_chapters:
                 is_new = chapter.find('em')
@@ -50,27 +33,26 @@ class MangaFoxChecker(SiteChecker):
                     main_anchor = header.find('a')
                     manga_name = main_anchor.text
 
-                    chapter_spans = chapter.findAll('span', attrs={'class':'chapter nowrap'})
-                    chapter_infos = []
+                    span = chapter.find('span', attrs={'class':'chapter nowrap'})
 
-                    for span in chapter_spans:
-                        anchor = span.find('a')
-                        href = anchor['href']
-                        info = anchor.text.split(' ')
-                        chapter_title = info[0]
-                        chapter_num = info[1]
+                    anchor = span.find('a')
+                    href = anchor['href']
+                    info = anchor.text.split(' ')
+                    chapter_title = info[0]
+                    chapter_num = info[1]
 
-                        ci = ChapterInfo(manga_name, chapter_title, chapter_num, href)
-                        chapter_infos.append(ci)
+                    ci = ChapterInfo(manga_name, chapter_title, chapter_num, href)
+                    chapter_infos.append(ci)
 
-                    ui = UpdateInfo(manga_name, chapter_infos)
+            ui = UpdateInfo(manga_name, chapter_infos)
 
-            if len(self.manga_watchlist) == 0 or manga_name in self.manga_watchlist:
+            if len(self.manga_watchlist) == 0 or manga_name in self.manga_watchlist and ui is not None:
                 if self.debug:
                     print str(ui)
                 all_updates += str(ui)
+                update_infos.append(ui)
 
-        return all_updates
+        return all_updates, update_infos
 
 def main():
     #my_watchlist = ['bleach', 'naruto', 'one piece']

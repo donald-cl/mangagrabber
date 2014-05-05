@@ -31,7 +31,7 @@ class MangaStreamChecker(SiteChecker):
                     print chapter_num
                 all_updates += href + info + caption + chapter_num
 
-        return all_updates
+        return all_updates, None
 
 def main():
     #my_watchlist = ['bleach', 'naruto', 'one piece']

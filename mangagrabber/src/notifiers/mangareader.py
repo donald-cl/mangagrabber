@@ -1,7 +1,3 @@
-import os
-import sys
-sys.path.insert(0, os.getcwd())
-
 from base_notifier import SiteChecker
 
 class MangaReaderChecker(SiteChecker):
@@ -18,19 +14,20 @@ class MangaReaderChecker(SiteChecker):
         for item in new_items:
 
             anchor = item.find('a', attrs={'class':'chaptersrec'}, recursive=True)
-            href = anchor['href']
-            info = anchor.text.split(' ')
-            manga_name = info[0]
-            chapter_num = info[1]
+            if anchor:
+                href = anchor['href']
+                info = anchor.text.split(' ')
+                manga_name = info[0]
+                chapter_num = info[1]
 
-            if len(self.manga_watchlist) == 0 or manga_name in self.manga_watchlist:
-                if self.debug:
-                    print href
-                    print manga_name
-                    print chapter_num
-                all_updates += href + manga_name + chapter_num
+                if len(self.manga_watchlist) == 0 or manga_name in self.manga_watchlist:
+                    if self.debug:
+                        print href
+                        print manga_name
+                        print chapter_num
+                    all_updates += href + manga_name + chapter_num
 
-        return all_updates
+        return all_updates, None
 
 def main():
     #my_watchlist = ['bleach', 'naruto', 'one piece']

@@ -1,4 +1,5 @@
 from utils import util
+from core import *
 import datetime
 import smtplib
 
@@ -13,17 +14,20 @@ def authenticate():
 
     return email, pw
 
-def ez_send_email(receivers, content):
+def ez_send_email(receivers, content, update_info=None):
     email, pw = authenticate()
-    send_email(email, pw, receivers, content)
+    send_email(email, pw, receivers, content, update_info)
 
-def send_email(email, pw, receivers, content):
+def send_email(email, pw, receivers, content, update_info=None):
     gmail_user = email
     gmail_pwd = pw
     FROM = email
     TO = receivers
     TIME = datetime.date.today()
     SUBJECT = "New manga has been released! --- " + str(TIME)
+
+    if update_info is not None:
+        content = html(update_info)
 
     # Prepare actual message
     message = """\From: %s\nTo: %s\nSubject: %s\n\n%s
