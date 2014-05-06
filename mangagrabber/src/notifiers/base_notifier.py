@@ -46,6 +46,14 @@ class SiteChecker(object):
         if self.debug:
             return all_updates
 
+class MangaSiteChecker(SiteChecker):
+    def __init__(self, manga_watchlist, sitename, homepage):
+        SiteChecker.__init__(self, manga_watchlist, sitename, homepage)
+
+class AnimeSiteChecker(SiteChecker):
+    def __init__(self, manga_watchlist, sitename, homepage):
+        SiteChecker.__init__(self, manga_watchlist, sitename, homepage)
+
 def set_cache_site_diff(sitename, all_updates):
     dirname = util.get_mangagrabber_dir() + "mangagrabber/updates/" + sitename + "_updates"
     if isfile(dirname):

@@ -1,8 +1,8 @@
-from base_notifier import SiteChecker
+from base_notifier import MangaSiteChecker
 
-class MangaStreamChecker(SiteChecker):
+class MangaStreamChecker(MangaSiteChecker):
     def __init__(self, manga_watchlist, sitename="mangastream", homepage='http://mangastream.com/'):
-        SiteChecker.__init__(self, manga_watchlist, sitename, homepage)
+        MangaSiteChecker.__init__(self, manga_watchlist, sitename, homepage)
 
     def scrape_updates(self):
         parsed_html = self.parse_page()

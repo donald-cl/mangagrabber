@@ -3,6 +3,9 @@ from core import *
 import datetime
 import smtplib
 
+from email.mime.multipart import MIMEMultipart
+from email.mime.text import MIMEText
+
 def authenticate():
     f = open(util.get_mangagrabber_dir() + 'auth.txt', 'r')
     lines = f.readlines()
@@ -26,18 +29,25 @@ def send_email(email, pw, receivers, content, update_info=None):
     TIME = datetime.date.today()
     SUBJECT = "New manga has been released! --- " + str(TIME)
 
-    if update_info is not None:
-        content = html(update_info)
+    msg = MIMEMultipart('alternative')
+    msg['Subject'] = SUBJECT
+    msg['From'] = FROM
+    msg['To'] = TO
+
+    msg.attach(MIMEText(content, 'html'))
+
+    #if update_info is not None:
+    #    content = update_info.toHtml()
 
     # Prepare actual message
-    message = """\From: %s\nTo: %s\nSubject: %s\n\n%s
-    """ % (FROM, ", ".join(TO), SUBJECT, content)
+    #message = """\From: %s\nTo: %s\nSubject: %s\n\n%s
+    #""" % (FROM, ", ".join(TO), SUBJECT, content)
     try:
         server = smtplib.SMTP("smtp.gmail.com", 587) #or port 465 doesn't seem to work!
         server.ehlo()
         server.starttls()
         server.login(gmail_user, gmail_pwd)
-        server.sendmail(FROM, TO, message)
+        server.sendmail(FROM, TO, msg.as_string())
         server.quit()
         print 'successfully sent the mail'
     except Exception as e:

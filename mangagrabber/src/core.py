@@ -20,7 +20,22 @@ class UpdateInfo(object):
 
         return info_str
 
-    def __html__(self):
+    def to_csv_str(self):
+        attrs = [self.manga_name]
+        for chapter in self.new_chapters:
+            attrs.append(chapter.chapter_title)
+            attrs.append(chapter.chapter_num)
+            attrs.append(chapter.href)
+
+        csv_str = ''
+        for i, attr in enumerate(attrs):
+            csv_str += attr
+            if i != len(attrs)-1:
+                csv_str += ','
+
+        return csv_str
+
+    def toHtml(self):
         html = ''
         html += '<table border=0>'
         html += '<tr>'

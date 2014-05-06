@@ -2,12 +2,12 @@ import os
 import sys
 sys.path.insert(0, os.getcwd())
 
-from base_notifier import SiteChecker
+from base_notifier import MangaSiteChecker
 from core import *
 
-class MangaFoxChecker(SiteChecker):
+class MangaFoxChecker(MangaSiteChecker):
     def __init__(self, manga_watchlist, sitename="mangafox", homepage='http://mangafox.me/releases/'):
-        SiteChecker.__init__(self, manga_watchlist, sitename, homepage)
+        MangaSiteChecker.__init__(self, manga_watchlist, sitename, homepage)
 
     def scrape_updates(self):
         parsed_html = self.parse_page()
@@ -52,7 +52,13 @@ class MangaFoxChecker(SiteChecker):
                 all_updates += str(ui)
                 update_infos.append(ui)
 
-        return all_updates, update_infos
+        update_info = ''
+        for ui in update_infos:
+            update_info += ui.toHtml()
+
+        all_updates = update_info
+
+        return all_updates, update_info
 
 def main():
     #my_watchlist = ['bleach', 'naruto', 'one piece']
