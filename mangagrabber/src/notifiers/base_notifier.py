@@ -34,7 +34,7 @@ class SiteChecker(object):
             print "============="
             print all_updates
             print "============="
-        mail.ez_send_email(['donaldhui@gmail.com'], all_updates, update_info)
+
         if current_content is None:
             set_cache_site_diff(self.sitename, all_updates)
         elif current_content != all_updates:
