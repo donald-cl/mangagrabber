@@ -32,16 +32,10 @@ def send_email(email, pw, receivers, content, update_info=None):
     msg = MIMEMultipart('alternative')
     msg['Subject'] = SUBJECT
     msg['From'] = FROM
-    msg['To'] = TO
+    msg['To'] = ','.join(TO)
 
     msg.attach(MIMEText(content, 'html'))
 
-    #if update_info is not None:
-    #    content = update_info.toHtml()
-
-    # Prepare actual message
-    #message = """\From: %s\nTo: %s\nSubject: %s\n\n%s
-    #""" % (FROM, ", ".join(TO), SUBJECT, content)
     try:
         server = smtplib.SMTP("smtp.gmail.com", 587) #or port 465 doesn't seem to work!
         server.ehlo()
