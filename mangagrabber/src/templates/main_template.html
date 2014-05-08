@@ -1,0 +1,57 @@
+<html>
+<title>Mangagrab</title>
+<head>
+    <link rel="stylesheet" type="text/css" href="static/bootstrap/css/bootstrap.min.css">
+    <link rel="stylesheet" type="text/css" href="static/bootstrap/css/bootstrap-responsive.min.css">
+    <link rel="stylesheet" type="text/css" href="static/bootstrap/css/docs.min.css">
+    <link rel="stylesheet" type="text/css" href="static/css/main.css">
+</head>
+<body>
+    <div class="jumbotron masthead">
+        <div class="container">
+            <h1>mangagrab</h1>
+            <p>Enter your e-mail address to be instantly notified when new manga is released.</p>
+            <p>
+            <form class="navbar-form">
+                <input type="text" class="search-query">
+                <button type="submit" class="btn">Subscribe</button>
+            </form>
+            </p>
+            <ul class="masthead-links">
+                <li>
+                    <a href="https://github.com/Xyik/mangagrabber">Github project</a>
+                </li>
+                <li>
+                    <a href="http://myanimelist.net/profile/Xyik">Developed by: Xyik</a>
+                </li>
+                <li>
+                    Version 1.0
+                </li>
+            </ul>
+        </div>
+    </div>
+    <div class="container" id="main-info-container">
+        <div class="marketing">
+            <p class="marketing-byline">
+                {{ "Last checked: " + datetime }}
+            </p>
+            <div class="row-fluid">
+                <div class="span12">
+                    {% for manga in mangas %}
+                    <span class="watched-site">{{ manga + "," }}</span>
+                    {% end %}
+                </div>
+            </div>
+        </div>
+        <footer class="footer" id="main-page-footer">
+            <div class="container">
+                <p>
+                    {% for site in sites %}
+                    <span class="watched-site">{{ site + "," }}</span>
+                    {% end %}
+                </p>
+            </div>
+        </footer>
+    </div>
+</body>
+</html>
